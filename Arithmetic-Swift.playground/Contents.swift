@@ -102,6 +102,14 @@ func timeNow()->Double{
     let timeStampTongS = Double(timeIntervalTongS)
     return timeStampTongS;
 }
+
+func testSortSpeed(list:inout [Int] , sortWays: (inout [Int])->()) -> Double{
+    let start = timeNow()
+    sortWays(&list)
+    let end = timeNow()
+    let delayTime = end - start
+    return delayTime
+}
 //当前时间的时间戳
 let t1 = timeNow()
 TongSort(numbers: [13,41,5,56,2,45,67,21,30,3])
@@ -109,11 +117,11 @@ let t2 = timeNow()
 let tongTime = t2 - t1
 
 
-let t3 = timeNow()
+
 var arrayPao = [13,41,5,56,2,45,67,21,30,3]
-PaoSort(numbers:  &arrayPao)
-let t4 = timeNow()
-let paoTime = t4 - t3
+testSortSpeed(list: &arrayPao, sortWays: PaoSort)
+//PaoSort(numbers:  &arrayPao)
+
 
 let t5 = timeNow()
 var array = [13,41,5,56,2,45,67,21,30,3]
