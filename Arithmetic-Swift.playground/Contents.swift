@@ -428,7 +428,149 @@ func reverse(_ x: Int) -> Int {
 }
 
 reverse(1534236469)
+//当剩下4个的时候一定会输 类似于数学归纳的方法
+func canWinNim(_ n: Int) -> Bool {
+ 
+    return (n % 4 != 0)
+    
+}
+canWinNim(3)
 
+
+func singleNumber(_ nums: [Int]) -> Int {
+
+
+    var result = 0
+    for i in nums{
+        
+        result = result^i
+        
+    }
+    return result
+}
+
+singleNumber([1,1,2,3,2,4,4,5,5])
+
+
+  public class TreeNode {
+      public var val: Int
+      public var left: TreeNode?
+      public var right: TreeNode?
+     public init(_ val: Int) {
+          self.val = val
+          self.left = nil
+          self.right = nil
+      }
+  }
+func maxDepth(_ root: TreeNode?) -> Int {
+    
+    var maxDepth = 1
+    
+    if root == nil {
+        return 0
+    }
+    func dfs(leaf:TreeNode? , depth:Int) -> Int{
+        
+        if leaf?.left == nil && leaf?.right == nil {
+            if depth > maxDepth {
+                maxDepth = depth
+            }
+            return maxDepth
+        }
+        
+        if leaf?.left != nil {
+            let leftdepth = dfs(leaf: leaf?.left, depth: depth+1)
+            if leftdepth > maxDepth {
+                maxDepth = leftdepth
+            }
+        }
+        if leaf?.right != nil {
+            let rightdepth = dfs(leaf: leaf?.right, depth: depth+1)
+            if rightdepth > maxDepth {
+                maxDepth = rightdepth
+            }
+        }
+        
+        return maxDepth
+        
+    }
+    
+    
+    return dfs(leaf: root, depth: 1)
+}
+
+func invertTree(_ root: TreeNode?) -> TreeNode? {
+ 
+    var newRes = root
+    
+    func treeResver(leaf: TreeNode?){
+        
+        if leaf?.left == nil && leaf?.right == nil {
+            
+            return 
+        }
+        
+       
+            
+            let temp = leaf?.left
+            leaf?.left = leaf?.right
+            leaf?.right = temp
+            
+        
+        
+        if leaf?.left != nil {
+            treeResver(leaf: leaf?.left)
+        }
+        if leaf?.right != nil {
+            treeResver(leaf: leaf?.right)
+        }
+
+    }
+    
+    treeResver(leaf: root)
+    return newRes
+}
+
+func addDigits(_ num: Int) -> Int {
+ 
+    var res = 0
+    var source = num
+    while  source != 0{
+        res += source % 10
+        source /= 10
+    }
+    if res >= 10 {
+        return addDigits(res)
+    }
+    return res
+}
+
+addDigits(19)
+
+
+func moveZeroes(_ nums: inout [Int]) {
+    var zero = -1
+    for i in 0..<nums.count {
+        
+        var temp = nums[i]
+        if temp != 0 {
+            if zero >= 0 {
+                nums[zero] = temp
+                zero+=1
+                nums[i] = 0
+                
+            }
+        }else{
+            if zero == -1 {
+                zero = i
+            }
+        }
+        
+        
+    }
+}
+var arrayZero = [0,0,1]
+moveZeroes(&arrayZero)
 /**********************************************/
 
 var strs = "hello world"
