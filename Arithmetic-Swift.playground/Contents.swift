@@ -346,8 +346,140 @@ func lengthOfLongestSubstring(_ s: String) -> Int {
 }
 
 lengthOfLongestSubstring("dvdf")
+//5. Longest Palindromic Substring
+func longestPalindrome(_ s: String) -> String {
+    
+    if s.characters.count == 1 {
+        return s
+    }
+    var maxLength = 0
+    var maxIndex = 0
+
+    let strArray = s.cString(using: String.Encoding.ascii)
+    
+    //加入差值占位符
+    var newStrArray:[CChar] = Array()
+    for strIndex in strArray!{
+        
+        newStrArray.append(strIndex)
+        newStrArray.append(CChar(44))
+    }
+    
+    //遍历找出最多的那个位置
+    let length = newStrArray.count-1
+    for i in 1..<length {
+        let currentMaxLength = min(i, length-i)
+        
+        for j in 0...currentMaxLength {
+            if newStrArray[i-j] == newStrArray[i+j] {
+                if j > maxLength {
+                    
+                    maxLength = j
+                    maxIndex = i
+                }
+                
+            }else{
+                break
+            }
+        }
+    }
+    
+    //去除间隔符
+    var resStrArray:[CChar] = Array()
+    for i in maxIndex-maxLength...maxIndex+maxLength+1 {
+        if newStrArray[i] != CChar(44) {
+            resStrArray.append(newStrArray[i])
+        }
+    }
+    let res = String(cString: resStrArray)
+    return res
+    
+}
+
+
+
+
+longestPalindrome("ccc#")
+
+func reverse(_ x: Int) -> Int {
+    
+    
+    var isMins =  false
+    var num = x
+    if num<0 {
+        isMins = true
+        num = -x
+    }
+    
+    let numStr = String(num)
+    
+    var newCArray = numStr.cString(using: String.Encoding.utf8)
+    newCArray?.removeLast()
+    newCArray?.reverse()
+ 
+    let newStr = String(cString:newCArray!)
+    let newNum = Int(newStr)
+    
+    if isMins {
+        return -newNum!
+    }else{
+        return newNum!
+    }
+}
+
+reverse(1534236469)
+
 /**********************************************/
 
+var strs = "hello world"
+strs += "there"
+let char:Character = "!"
+strs.append(char)
+
+//一些特殊字符 通过\转译字符
+let einstein = "\" l love u\" - cc "
+//unicode码
+let blackHeart = "\u{2665}"      // ♥,  Unicode scalar U+2665
+let sparklingHeart = "\u{1F496}" // 💖, Unicode scalar U+1F496
+
+
+//生成空字符串
+var empty = ""
+var another = String()
+
+if empty.isEmpty {
+    print("i'm empty")
+}
+
+//String的拼接
+
+var changeStr = "i"
+changeStr += "love u"
+
+//Swift 中的String 是 value类型的 ，并不是对象的类型，不像OC中的NSString一样，每次构造新的String的时候都会复制一份新的。这一特性确保了，你在任何方法和函数中拿到的String都是绝对安全的，除非你去改变它的值的话，一搬这个值是不会变得
+//Swift 的编译器会进行优化，只有当你改变值的时候才会去进行拷贝操作，所以用的时候并不会有性能比问题
+
+for character in "Dog!🐶".characters {
+    print(changeStr)
+}
+// D
+// o
+// g
+// !
+// 🐶
+
+let singleChar:Character = "!"//只能是一位
+
+//String可以通过Character的数组来构造
+let catCharacters: [Character] = ["C", "a", "t", "!", "🐱"]
+let catString = String(catCharacters)
+print(catString)
+// Prints "Cat!🐱"
+
+
+
+
+/**********************************************/
 
 //当前时间的时间戳
 let t1 = timeNow()
