@@ -35,3 +35,11 @@
 >遍历求单个数字 136. Single Number
 
 >石头游戏 292. Nim Game 【数学归纳】
+
+----2016.10.12
+>二叉树左侧求和 404 Sum of Left Leaves [10min]
+
+>最长回文串的长度 409 Longest Palindrome [20min]
+
+>383 Ransom Note [30min]
+

@@ -349,7 +349,7 @@ lengthOfLongestSubstring("dvdf")
 //5. Longest Palindromic Substring
 func longestPalindrome(_ s: String) -> String {
     
-    if s.characters.count == 1 {
+    if s.characters.count == 1 || s.characters.count == 0{
         return s
     }
     var maxLength = 0
@@ -391,7 +391,10 @@ func longestPalindrome(_ s: String) -> String {
             resStrArray.append(newStrArray[i])
         }
     }
-    let res = String(cString: resStrArray)
+    var res = s
+    resStrArray.withUnsafeBufferPointer { (ptr) in
+        res = String(cString: ptr.baseAddress!)
+    }
     return res
     
 }
@@ -571,6 +574,143 @@ func moveZeroes(_ nums: inout [Int]) {
 }
 var arrayZero = [0,0,1]
 moveZeroes(&arrayZero)
+
+//404 Sum of Left Leaves
+func sumOfLeftLeaves(_ root: TreeNode?) -> Int {
+    var sum = 0
+    
+    func dfs(_ leaf:TreeNode?){
+        
+        if leaf?.left == nil && leaf?.right == nil {
+            
+            return
+        }
+        
+        if leaf?.left != nil {
+            
+            if leaf?.left?.left == nil && leaf?.left?.right == nil {
+                sum += (leaf?.left?.val)!
+                print(leaf?.left?.val)
+            }else{
+                dfs(leaf?.left)
+            }
+        }
+        if leaf?.right != nil {
+            dfs(leaf?.right)
+        }
+    }
+    
+    dfs(root)
+    return sum
+    
+}
+//26个字母占坑 58个
+//409 Longest Palindrome
+func longestPalindromeNum(_ s: String) -> Int {
+    var res = 0
+    
+    var letters = Array(repeating: 0, count: 200)
+    
+    let strArray = s.cString(using: String.Encoding.ascii)
+    
+    for temp in strArray! {
+        
+        if letters[temp.hashValue] == 0 {
+            letters[temp.hashValue] = 1
+        }else{
+            letters[temp.hashValue] += 1
+        }
+        print(temp.hashValue)
+    }
+    
+    for temp in letters {
+        if temp > 1 {
+            temp % 2 == 0 ? (res += temp) : (res += (temp-1))
+        }
+    }
+    
+    if res == s.characters.count {
+        return res
+    }
+    return res + 1;
+}
+longestPalindromeNum("bbccsdcca")
+
+//383 Ransom Note
+func canConstruct(_ ransomNote: String, _ magazine: String) -> Bool {
+
+    if ransomNote.isEmpty {
+        return true
+    }
+    
+    var ranArray = Array(repeating: 0, count: 27)
+    var magArray = Array(repeating: 0, count: 27)
+    
+    for magchar in magazine.cString(using: String.Encoding.ascii)! {
+        
+        if magchar.hashValue != 0 {
+            let index = magchar.hashValue - 96
+            if magArray[index] == 0 {
+                magArray[index] = 1
+            }else{
+                magArray[index] += 1
+            }
+            
+        }
+        
+    }
+    
+    for ranchar in ransomNote.cString(using: String.Encoding.ascii)! {
+        
+        if ranchar.hashValue != 0 {
+            let index = ranchar.hashValue - 96
+            if ranArray[index] == 0 {
+                ranArray[index]  = 1
+            }else{
+                ranArray[index] += 1
+            }
+            
+        }
+        
+    }
+    print(ranArray)
+    print(magArray)
+    for i in 0..<ranArray.count {
+        if ranArray[i] != 0 {
+            if ranArray[i] > magArray[i] {
+                return false
+            }
+        }
+    }
+    
+    return true
+//    var newStr = ""
+//    for magchar in magazine.characters {
+//        
+//        if ransomNote.contains(String(magchar)) {
+//            newStr.append(magchar)
+//        }
+//        
+//    }
+//    print(newStr)
+//    return newStr.contains(ransomNote)
+    
+//    var normalRes = 0
+//    
+//    for normal in magazine.cString(using: String.Encoding.ascii)! {
+//        normalRes ^= normal.hashValue
+//    }
+//
+//    var appendRes = 0
+//    for append in ransomNote.appending(magazine).cString(using: String.Encoding.ascii)!{
+//        appendRes ^= append.hashValue
+//    }
+//    print(" n = \(normalRes) a = \(appendRes)")
+//    return appendRes == normalRes ? true : false
+}
+canConstruct("fffbfg",
+    "effjfggbffjdgbjjhhdegh")
+
 /**********************************************/
 
 var strs = "hello world"
@@ -619,8 +759,30 @@ print(catString)
 // Prints "Cat!🐱"
 
 
+var greeting = "hello world"
+greeting[greeting.startIndex]
 
+greeting[greeting.index(after: greeting.startIndex)]
 
+greeting[greeting.index(before: greeting.endIndex)]
+
+let index = greeting.index(greeting.startIndex, offsetBy: 3)
+greeting[index]
+
+for index in greeting.characters.indices {
+    print("\(greeting[index])" ,terminator:" ")
+}
+//h e l l o   w o r l d
+//小技巧
+//print(_:separator:terminator:)  两个参数代表 间隔符 和 不换行
+
+greeting.insert("!", at: greeting.endIndex)
+greeting.insert(contentsOf: " swift".characters, at: greeting.endIndex)
+greeting.insert(contentsOf: " ,".characters, at: greeting.index(greeting.startIndex, offsetBy: 5))
+
+greeting.remove(at: greeting.startIndex)
+greeting.removeSubrange(greeting.startIndex..<greeting.index(greeting.startIndex, offsetBy: 3))
+greeting.removeSubrange(greeting.index(greeting.endIndex, offsetBy: -6)..<greeting.endIndex)
 /**********************************************/
 
 //当前时间的时间戳
