@@ -711,9 +711,191 @@ func canConstruct(_ ransomNote: String, _ magazine: String) -> Bool {
 canConstruct("fffbfg",
     "effjfggbffjdgbjjhhdegh")
 
+//349. Intersection of Two Arrays
+func intersection(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+    var res:[Int] = Array()
+    
+    for num1 in nums1 {
+        if nums2.contains(num1) {
+            if !res.contains(num1) {
+                res.append(num1)
+            }
+            
+        }
+    }
+    
+    return res
+}
+
+//100. Same Tree
+func isSameTree(_ p: TreeNode?, _ q: TreeNode?) -> Bool {
+    if p == nil && q == nil {
+        return true
+    }
+    
+    
+    
+    if p?.val != q?.val {
+        return false;
+    }
+    
+    if p?.left == nil && p?.right == nil && q?.left == nil && q?.right == nil && p?.val == q?.val {
+        return true
+    }
+    
+    
+    return isSameTree(p?.left, q?.left) && isSameTree(p?.right, q?.right)
+}
+//171. Excel Sheet Column Number
+func titleToNumber(_ s: String) -> Int {
+    func cifang(_ num: Int ,_ cifang:Int) -> Int{
+        if cifang == 0 {
+            return 1
+        }
+        var res = num
+        
+        for _ in 1..<cifang {
+            res *= num
+        }
+        
+        return res
+    }
+    var res = 0
+    
+    var cArray = s.cString(using: String.Encoding.ascii)
+    
+    for i in 0..<(cArray?.count)! - 1 {
+        let charNum = (cArray?[i])!.hashValue - 64
+        
+        res += cifang(26, (cArray?.count)! - 1 - i - 1)*charNum
+    }
+    
+    return res
+}
+titleToNumber("ABA")
+
+//387. First Unique Character in a String
+func firstUniqChar(_ s: String) -> Int {
+
+    var letter = Array(repeating: -1, count: 27)
+    var cString = s.cString(using: String.Encoding.ascii)
+    var index = -1
+    
+    for i in 0..<((cString?.count)! - 1) {
+        
+        let charNum = (cString?[i].hashValue)! - 96
+        
+        if letter[charNum] == -1 {
+            print("c = \(charNum) i = \(i) ")
+            letter[charNum] = i
+        }else{
+            letter[charNum] = -2 //show twice
+        }
+        
+    }
+    
+    print(letter)
+    for pos in 0..<letter.count {
+        
+        if letter[pos] != -1 && letter[pos] != -2 {
+            if index == -1 {
+                index = letter[pos]
+            }
+            if index > letter[pos] {
+                index = letter[pos]
+            }
+        }
+    }
+    
+    return index
+    
+}
+
+firstUniqChar("fa")
+
+//169. Majority Element
+
+func majorityElement(_ nums: [Int]) -> Int {
+    var res = 0
+    var num = 0
+    var dic:[Int:Int] = [:]
+    for index in 0..<nums.count {
+        if let value = dic[nums[index]] {
+            dic[nums[index]] = 1 + value
+        }else{
+            dic[nums[index]] = 1
+        }
+    }
+    
+    for (key, value) in dic {
+        if value > res {
+            res = value
+            num = key
+        }
+    }
+    
+    return num
+}
+
+majorityElement([1,2,3,4,5,5,5,5,5,5,23,41,42,35,34,23,34,535,64,43,5,234324,2])
+
+//217. Contains Duplicate 
+func containsDuplicate(_ nums: [Int]) -> Bool {
+    
+    var dic:[Int:Int] = [:]
+    //1。遍历 太慢 只做n时间复杂度的
+    
+    for index in nums{
+       dic[index] = 0
+    }
+    
+    if dic.count == nums.count {
+        return false
+    }
+    
+    return true
+}
+
+containsDuplicate([1,23,4,5,6,7,5])
+
+
+//401. Binary Watch
+func readBinaryWatch(_ num: Int) -> [String] {
+    
+    
+    return [""]
+}
+
+//350. Intersection of Two Arrays II
+func intersect(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+ 
+    var longArray:[Int]
+    var shortArray:[Int]
+    var res:[Int] = Array();
+    if nums1.count > nums2.count {
+        longArray = nums1
+        shortArray = nums2
+    }else{
+        shortArray = nums1
+        longArray = nums2
+    }
+    
+    for index in 0..<shortArray.count {
+        if longArray.contains(shortArray[index]) {
+            res.append(shortArray[index])
+            longArray.remove(at: longArray.index(of:shortArray[index])!)
+        }
+    }
+    
+    return res
+}
+
+intersect([1,23,4,5], [1,4,4]);
+
 /**********************************************/
 
-var strs = "hello world"
+var strs = "A B hello world"
+print(strs.cString(using: String.Encoding.ascii))
 strs += "there"
 let char:Character = "!"
 strs.append(char)
