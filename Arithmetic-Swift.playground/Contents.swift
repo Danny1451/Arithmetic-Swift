@@ -892,9 +892,256 @@ func intersect(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
 
 intersect([1,23,4,5], [1,4,4]);
 
+func addStrings(_ num1: String, _ num2: String) -> String {
+    
+    let num1Cstring = num1.cString(using: String.Encoding.ascii)!
+    let num2Cstring = num2.cString(using: String.Encoding.ascii)!
+    
+    let count = (num1Cstring.count) > (num2Cstring.count) ? num1Cstring.count : num2Cstring.count
+    
+    let num1Count = num1Cstring.count
+    let num2Count = num2Cstring.count
+    
+    var newRes = ""
+    
+    var hasJin = false
+    for i in 0..<(count-1) {
+        var num1Char = 0
+        if (num1Count - 2 - i) >= 0 {
+            num1Char = num1Cstring[num1Count - 2 - i].hashValue - 48
+        }
+       
+        var num2Char = 0
+        if (num2Count - 2 - i) >= 0 {
+            num2Char = num2Cstring[num2Count - 2 - i].hashValue - 48
+        }
+        let jinNum = hasJin ? 1 : 0
+        var newNum = num1Char + num2Char + jinNum
+        
+        if newNum >= 10 {
+            newNum = newNum - 10
+            hasJin = true
+        }else{
+            hasJin = false
+        }
+        
+        newRes.insert(String(newNum).characters.first!, at: newRes.startIndex)
+    }
+    
+    if hasJin {
+        newRes.insert(Character("1"), at: newRes.startIndex)
+    }
+    
+    return newRes
+}
+
+addStrings("1", "2")
+
+func isPowerOfThree(_ n: Int) -> Bool {
+    
+//    return ( n>0 &&  1162261467%n == 0);
+    
+    if n <= 0 {
+        return false
+    }
+    if n == 1 {
+        return true
+    }
+    var num = n
+    while num  > 3 {
+        if num % 3 != 0 {
+            return false
+        }
+        
+        num = num / 3
+        
+        
+    }
+    
+    return num % 3 == 0 ? true : false
+}
+
+isPowerOfThree(99980001)
+
+//202. Happy Number
+func isHappy(_ n: Int) -> Bool {
+    return false
+}
+
+//83. Remove Duplicates from Sorted List
+func deleteDuplicates(_ head: ListNode?) -> ListNode? {
+    
+    
+    func removeDouble(_ list: ListNode?){
+        
+        if list?.next == nil {
+            return
+        }
+        
+        //相同的话跳过下一个
+        if list?.next?.val == list?.val {
+            list?.next = list?.next?.next
+            removeDouble(list)
+        }else{
+            removeDouble(list?.next)
+        }
+        
+        
+    }
+    
+    removeDouble(head)
+    
+    return head
+    
+}
+//121. Best Time to Buy and Sell Stock
+func maxProfit(_ prices: [Int]) -> Int {
+    var res = 0
+    if prices.isEmpty {
+        return 0
+    }
+    
+    var min = prices[0]
+    
+    for i in 1..<prices.count {
+        
+        if prices[i] < min{
+            min = prices[i]
+        }else{
+            
+            let temp = prices[i] - min
+            
+            if temp > res {
+                res = temp
+            }
+            
+            
+        }
+        
+        
+    }
+    
+    return res;
+//复杂度太高
+//    if prices.count <= 1 {
+//        return res
+//    }
+//    
+//    for i in 0..<prices.count {
+//        for j in (i + 1)..<prices.count {
+//            
+//            if prices[j] > prices[i] {
+//                let profit = prices[j] - prices[i]
+//                if profit > res {
+//                    res = profit
+//                }
+//            }
+//            
+//        }
+//    }
+//    
+    
+    
+    
+    
+}
+maxProfit([3,3,3,3]);
+
+func isUgly(_ num: Int) -> Bool {
+    if num < 0 {
+        return false
+    }
+    
+    var nums = num
+    while nums%2 == 0 {
+        nums /= 2
+    }
+    while nums%3 == 0 {
+        nums /= 3
+    }
+
+    while nums%5 == 0 {
+        nums /= 5
+    }
+    
+    return nums == 1 ? true : false
+}
+
+isUgly(-2147483648)
+
+//21. Merge Two Sorted Lists
+func mergeTwoLists(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
+    
+    if l1 == nil {
+        return l2
+    }
+    
+    if l2 == nil {
+        return l1
+    }
+    
+  
+ 
+    if (l1?.val)! > (l2?.val)! {
+        l2?.next = mergeTwoLists(l1, l2?.next)
+        return l2
+    }else{
+        l1?.next = mergeTwoLists(l1?.next, l2)
+        return l1
+    }
+    
+    
+}
+//24. Swap Nodes in Pairs
+func swapPairs(_ head: ListNode?) -> ListNode? {
+    
+    if head == nil {
+        return nil
+    }
+    
+    let res = ListNode(0)
+    
+    var tempArray:[Int] = []
+    
+    var list = head
+    while list != nil {
+        tempArray.append((list?.val)!)
+        list = list?.next
+    }
+    res.val = tempArray.popLast()!;
+    var tempStart = res
+    
+    while tempArray.count > 0 {
+        let tempNode = ListNode(tempArray.popLast()!)
+        tempStart.next = tempNode
+        tempStart = tempNode
+    }
+    
+    return res
+}
+
+//成对交换链表
+func swapPair(_ head: ListNode?) -> ListNode? {
+    
+    if head == nil || head?.next == nil {
+        return head
+    }
+    
+    let newHead = head
+    let end = newHead?.next
+    
+    newHead?.next = end?.next
+    end?.next = newHead
+    
+    let res = end
+    
+    newHead?.next = swapPair(newHead?.next)
+    
+    return res
+}
 /**********************************************/
 
-var strs = "A B hello world"
+var strs = "1234567890A B hello world"
 print(strs.cString(using: String.Encoding.ascii))
 strs += "there"
 let char:Character = "!"
