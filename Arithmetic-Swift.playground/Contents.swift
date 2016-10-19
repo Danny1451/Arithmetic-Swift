@@ -1139,9 +1139,249 @@ func swapPair(_ head: ListNode?) -> ListNode? {
     
     return res
 }
+//345. Reverse Vowels of a String   beat 100%
+func reverseVowels(_ s: String) -> String {
+    
+    func checkIsVowels(_ lettet : Int) -> Bool{
+        if  lettet == 97 ||
+            lettet == 101 ||
+            lettet == 105 ||
+            lettet == 111 ||
+            lettet == 117 ||
+            lettet == 65 ||
+            lettet == 69 ||
+            lettet == 73 ||
+            lettet == 79 ||
+            lettet == 85     {
+            return true
+        }
+        return false
+    }
+    
+    
+    
+    var cString = s.cString(using: String.Encoding.ascii)!
+    
+    var i = 0
+    var j = cString.count - 1
+    
+    while i < j {
+        while !checkIsVowels(cString[i].hashValue) && i < j{
+            i += 1
+        }
+        
+        while !checkIsVowels(cString[j].hashValue) && i < j {
+            j -= 1
+        }
+        
+        if i < j {
+            
+            let temp = cString[i]
+            cString[i] = cString[j]
+            cString[j] = temp
+            
+            
+            i += 1
+            j -= 1
+        }
+        
+    }
+    
+    return String(cString: cString, encoding: String.Encoding.ascii)!
+    
+}
+reverseVowels("l")
+
+//198. House Robber
+func rob(_ nums: [Int]) -> Int {
+    if nums.isEmpty {
+        return 0
+    }
+    
+    if nums.count == 1 {
+        return nums[0]
+    }
+    var all = Array(repeating: 0, count: nums.count + 1)
+//    var pos = Array(repeating: 0, count: nums.count)
+    
+    all[0] = 0
+    all[1] = nums[0]
+    
+    
+    for i in 2...nums.count {
+        
+        all[i] = max(all[i - 1], all[i - 2] + nums[i - 1])
+        
+    }
+    
+    
+    return all[nums.count]
+}
+
+rob([1,3,2,4,7,2,4,5])
+
+//107. Binary Tree Level Order Traversal II
+func levelOrderBottom(_ root: TreeNode?) -> [[Int]] {
+    
+    if root == nil {
+        return [[]]
+    }
+    
+    var res:[[Int]] = [[]]
+    
+    func resvers(_ node:TreeNode? , _ level:Int){
+        if node?.left == nil && node?.right == nil {
+            
+            //            res[level].append((node?.val)!)
+            
+            return
+        }
+        
+        if node?.left != nil {
+            while res.count <= level + 1 {
+                res.append([])
+            }
+            res[level + 1].append((node?.left?.val)!)
+            resvers(node?.left, level + 1)
+        }
+        
+        if node?.right != nil {
+            while res.count <= level + 1 {
+                res.append([])
+            }
+            res[level + 1].append((node?.right?.val)!)
+            resvers(node?.right, level + 1)
+        }
+        
+    }
+    res[0].append((root?.val)!)
+    resvers(root, 0)
+    
+    
+    //倒序
+    var newRes:[[Int]] = Array()
+    while !res.isEmpty {
+        newRes.append(res.popLast()!)
+    }
+    
+    return newRes
+
+}
+//101. Symmetric Tree
+func isSymmetric(_ root: TreeNode?) -> Bool {
+    
+    if root == nil {
+        return true
+    }
+    
+    func isSame(_ p: TreeNode?, _ q: TreeNode?) -> Bool {
+        if p == nil && q == nil {
+            return true
+        }
+        
+        
+        
+        if p?.val != q?.val {
+            return false;
+        }
+        
+        if p?.left == nil && p?.right == nil && q?.left == nil && q?.right == nil && p?.val == q?.val {
+            return true
+        }
+        
+        
+        return isSame(p?.left, q?.right) && isSame(p?.left, q?.right)
+    }
+    return isSame(root?.left, root?.right)
+    
+    
+    
+}
+//27. Remove Element
+func removeElement(_ nums: inout [Int], _ val: Int) -> Int {
+    
+ 
+    var i = 0
+    var count = nums.count
+    while i < count {
+        
+        if nums[i] == val {
+            
+            nums.remove(at: i)
+            count -= 1
+            i -= 1
+        }
+        i += 1
+    }
+    
+   
+    return nums.count
+}
+var ement = [3,2,2,3,3]
+
+removeElement(&ement, 3)
+print(ement)
+
+//66. Plus One
+func plusOne(_ digits: [Int]) -> [Int] {
+    var res = digits
+    
+    func add(_ num1:Int , _ num2:Int, _ jin:Bool) -> (num :Int, flag: Bool){
+        
+        
+        var result = num1 + num2
+        
+        if jin {
+            result += 1
+        }
+        
+        if result >= 10 {
+            return (result - 10 , true )
+        }else{
+            return (result,false)
+        }
+        
+    }
+    var flag = false
+    var first = true
+    for i in 0..<res.count{
+        let temp = add(res[res.count - 1 - i],first ? 1 : 0, flag)
+        first = false
+        flag = temp.flag
+        res[res.count - 1 - i] = temp.num
+    }
+    
+    if flag {
+        res.insert(1, at: 0)
+    }
+    
+    return res
+}
+
+plusOne([9,2,3,4,8,9])
+
+//26. Remove Duplicates from Sorted Array
+func removeDuplicates(_ nums: inout [Int]) -> Int {
+    
+    var i = 0
+    var j = 1
+    
+    let count = nums.count
+    while i < count {
+        
+        if nums[i] == nums[j] {
+            j += 1
+        }else{
+            i += 1
+            nums[i] == nums[j]
+            j += 1
+        }
+    }
+    return i + 1
+}
 /**********************************************/
 
-var strs = "1234567890A B hello world"
+var strs = "aeiou AEIOU 1234567890A B hello world"
 print(strs.cString(using: String.Encoding.ascii))
 strs += "there"
 let char:Character = "!"
