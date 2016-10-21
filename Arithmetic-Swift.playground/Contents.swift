@@ -1379,6 +1379,239 @@ func removeDuplicates(_ nums: inout [Int]) -> Int {
     }
     return i + 1
 }
+
+//9. Palindrome Number
+func isPalindrome(_ x: Int) -> Bool {
+    if x < 0 {
+        return true
+    }
+    
+    if x < 10 {
+        return true
+    }
+    if x % 10 == 0 {
+        return false
+    }
+    if x < 100 && x%11 == 0 {
+        return true
+    }
+    if x < 1000 && ( x / 100 == x % 100) {
+        return true
+    }
+    
+    var y = x % 10
+    var x = x / 10
+    
+    
+    
+    while x > y  {
+        y = y*10 + x%10
+        x /= 10
+        print("x = \(x) , y = \(y)")
+    }
+    if y > x {
+        y /= 10
+    }
+    
+    return y == x ? true : false
+    
+}
+isPalindrome(12321)
+
+//118. Pascal's Triangle
+func generate(_ numRows: Int) -> [[Int]] {
+    
+    func trangle(_ nums: [Int]?)->[Int]{
+        guard let num = nums else {
+            return [1]
+        }
+        
+        if num.count == 1 {
+            return [1,1]
+        }
+        var res = Array(repeating: 0, count: num.count + 1)
+        res[0] = 1
+        for i in 1..<num.count {
+            res[i] = num[i-1] + num[i]
+        }
+        res[num.count] = 1
+        return res
+    }
+    
+    if numRows == 0 {
+        return []
+    }
+    
+    var res:[[Int]] = []
+    for _  in 1...numRows {
+        res.append(trangle(res.last))
+    }
+
+    return res
+    
+}
+generate(1)
+generate(2)
+generate(3)
+generate(4)
+generate(10)
+
+//119. Pascal's Triangle II
+func getRow(_ rowIndex: Int) -> [Int] {
+    
+    func trangle(_ nums: [Int]?)->[Int]{
+        guard let num = nums else {
+            return [1]
+        }
+        
+        if num.count == 1 {
+            return [1,1]
+        }
+        var res = Array(repeating: 0, count: num.count + 1)
+        res[0] = 1
+        for i in 1..<num.count {
+            res[i] = num[i-1] + num[i]
+        }
+        res[num.count] = 1
+        return res
+    }
+    
+    if rowIndex == 0 {
+        return []
+    }
+    
+    var res:[[Int]] = []
+    for _  in 1...rowIndex {
+        res.append(trangle(res.last))
+    }
+    
+    return res.last!
+    
+}
+//268. Missing Number
+func missingNumber(_ nums: [Int]) -> Int {
+    var max = 0
+    var value1 = 0
+    var hasZero = false
+    for i in nums {
+        if i > max {
+            max = i
+        }
+        if i == 0 {
+            hasZero = true
+        }
+        value1 ^= i
+    }
+
+    var value2 = 0
+    for i in 0...max {
+        value2 ^= i
+    }
+    
+    let res = value2 ^ value1
+    
+    if res == 0 {
+        if hasZero {
+            return max + 1
+        }else{
+            return 0
+        }
+        
+    }
+    return res
+    
+}
+missingNumber([0])
+missingNumber([1,2,3,4,5,6,7])
+missingNumber([0,1,2,3,5,6,7])
+
+//172. Factorial Trailing Zeroes
+func trailingZeroes(_ n: Int) -> Int {
+    var num = 0;
+    var n = n
+    while(n != 0)
+    {
+        num += n / 5;
+        n = n / 5;
+    }
+    
+    return num;
+    
+}
+
+trailingZeroes(19)
+
+//36. Valid Sudoku
+func isValidSudoku(_ board: [[Character]]) -> Bool {
+    
+
+    
+    for i in 0..<board.count{
+        
+        var rows:Set<Character> = Set()
+        var colums:Set<Character> = Set()
+        var cube:Set<Character> = Set()
+
+        for j in 0..<board[i].count {
+            
+            if board[i][j] != "." && !rows.insert(board[i][j]).inserted {
+                return false
+            }
+            if board[j][i] != "." && !colums.insert(board[j][i]).inserted {
+                return false
+            }
+            
+            let rowIndex = 3 * ( i/3)
+            let collIndex = 3 * ( i%3)
+            if board[rowIndex + j/3][collIndex + j%3] != "." && !cube.insert(board[rowIndex + j/3 ][collIndex + j%3]).inserted {
+                return false
+            }
+            
+            
+        }
+    }
+    
+    
+    
+    
+    //检查横的9条
+    return true
+}
+
+//112. Path Sum
+func hasPathSum(_ root: TreeNode?, _ sum: Int) -> Bool {
+    
+    if root == nil {
+        return false
+    }
+    
+    //所有结果
+    var sums:[Int] = []
+    
+    func addSum(_ node: TreeNode?, _ lastsum:Int){
+        
+        if node?.left == nil && node?.right == nil {
+            
+            //总数加到数组里
+            sums.append(lastsum + (node?.val)!)
+            
+            return
+        }
+        
+        let newSum = lastsum + (node?.val)!
+        if node?.left != nil {
+            addSum(node?.left, newSum)
+        }
+        
+        if node?.right != nil {
+            addSum(node?.right, newSum)
+        }
+    }
+    
+    addSum(root, 0)
+    print(sums)
+    return sums.contains(sum)
+}
 /**********************************************/
 
 var strs = "aeiou AEIOU 1234567890A B hello world"
