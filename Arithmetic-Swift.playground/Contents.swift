@@ -1612,6 +1612,451 @@ func hasPathSum(_ root: TreeNode?, _ sum: Int) -> Bool {
     print(sums)
     return sums.contains(sum)
 }
+
+//111. Minimum Depth of Binary Tree
+func minDepth(_ root: TreeNode?) -> Int {
+    if root == nil {
+        return 0
+    }
+    
+    var res = 0
+    
+    func judgeLeat(_ node: TreeNode?, _ depth:Int){
+        
+        if node?.left == nil && node?.right == nil {
+            
+            
+            let tempdepth = depth + 1
+            
+            if res == 0 {
+                res = tempdepth
+            }else {
+                if tempdepth <= res  {
+                        res = tempdepth
+                }
+                
+            }
+            
+            
+            return
+        }
+        
+        if node?.left != nil {
+            judgeLeat(node?.left, depth + 1)
+        }
+        
+        if node?.right != nil {
+            judgeLeat(node?.right, depth + 1)
+        }
+        
+    }
+    judgeLeat(root, res)
+    
+    return res
+}
+
+//205. Isomorphic Strings
+func isIsomorphic(_ s: String, _ t: String) -> Bool {
+    if s == nil && t == nil {
+        return true
+    }
+    
+    if s.characters.count != t.characters.count {
+        return false
+    }
+    
+    var arrayS:[Int] = Array(repeating: 0, count: 256)
+    var arrayT:[Int] = Array(repeating: 0, count: 256)
+    var c1 = 0
+    var c2 = 0
+    var count = 1
+    var sCString = s.cString(using: String.Encoding.ascii)!
+    var tCString = t.cString(using: String.Encoding.ascii)!
+    for i in 0..<(sCString.count) - 1 {
+        c1 = sCString[i].hashValue
+        c2 = tCString[i].hashValue
+        if arrayS[c1] != arrayT[c2] {
+            return false
+        }
+        arrayS[c1] = count
+        arrayT[c2] = count
+        count += 1
+    }
+    
+    
+    return true
+}
+isIsomorphic("abb", "egg")
+
+//38. Count and Say
+func countAndSay(_ n: Int) -> String {
+    
+    func trans(_ str: String) -> String{
+        var res = ""
+        var count = 0
+        var temp = str.characters.first
+        for char in str.characters {
+            
+            if char == temp {
+                count += 1
+                
+            }else{
+                //得到count的值 
+                let countchar = Character(String(count))
+                res.append(countchar)
+                res.append(temp!)
+                print(res)
+                count = 1
+            }
+            
+            temp = char
+            
+        
+        }
+        
+        let countchar = Character(String(count))
+        res.append(countchar)
+        res.append(temp!)
+        print(res)
+        count = 1
+
+        return res
+    }
+    
+    if n == 0 {
+        return ""
+    }
+    
+    
+    
+    var res = "1"
+    for _ in 0..<n - 1 {
+        res = trans(res)
+    }
+    
+    return res
+}
+countAndSay(4)
+
+//19. Remove Nth Node From End of List
+func removeNthFromEnd(_ head: ListNode?, _ n: Int) -> ListNode? {
+    
+    if head == nil {
+        return nil
+    }
+    
+
+    var temp = head
+    var count = 0
+    while temp != nil {
+        count += 1
+        temp = temp?.next
+        
+    }
+    
+    
+   
+    var num = count - n
+    
+    if num == 0 {
+        return head?.next
+    }
+    temp = head
+    
+    for _ in 0..<num - 1 {
+        temp = temp?.next
+    }
+    var deleteNode = temp?.next
+    var originNext = deleteNode?.next
+    
+    temp?.next = originNext
+    
+    return head
+}
+
+//223. Rectangle Area
+func computeArea(_ A: Int, _ B: Int, _ C: Int, _ D: Int, _ E: Int, _ F: Int, _ G: Int, _ H: Int) -> Int {
+    var res = 0
+    
+    //在下面 没有交集
+    if H < B || C < E {
+        return 0
+    }
+    
+   
+    
+    if H > B && C > E {
+        return (H-B)*(C - E)
+    }
+    
+    return res
+    
+}
+//290. Word Pattern
+func wordPattern(_ pattern: String, _ str: String) -> Bool {
+    
+    if pattern == nil && str == nil {
+        return true
+    }
+    
+    var patternDic:[CChar:Int] = [:]
+    var strDic:[String:Int] = [:]
+    
+    var strArray = str.characters.split(separator: Character(" "))
+    var patternCString = pattern.cString(using: String.Encoding.ascii)!
+    var count = 1
+    
+//    print(strArray)
+    
+    if strArray.count != patternCString.count - 1{
+        return false
+    }
+    
+    for i in 0..<pattern.characters.count {
+        var cp = patternCString[i]
+        var cs = String(strArray[i])
+        if patternDic[cp] != strDic[cs] {
+            return false
+        }
+        patternDic[cp] = count
+        strDic[cs] = count
+        count += 1
+        
+    }
+    
+    return true
+}
+wordPattern("abba","dog cat cat dog")
+
+//20. Valid Parentheses
+func isValid(_ s: String) -> Bool {
+    if s.characters.count == 0 {
+        return true
+    }
+    
+    if s.characters.count % 2 != 0 {
+        return false
+    }
+    
+    
+    func checkBrackets(_ c1:Character? , _ c2:Character)-> Bool{
+        if c1 == nil {
+            return false
+        }
+        let c1 = c1!
+        if c1 == "(" && c2 == ")" {
+            return true
+        }
+        if c1 == "{" && c2 == "}" {
+            return true
+        }
+        
+        if c1 == "[" && c2 == "]" {
+            return true
+        }
+        
+        return false
+    }
+    
+    var stack:[Character] = []
+    
+    //从头遍历
+    for chars in s.characters {
+        if chars == "[" || chars == "{" || chars == "("{
+            stack.append(chars)
+        }
+        
+        if chars == "]" || chars == "}" || chars == ")"{
+            //正好对应
+            if(checkBrackets(stack.last, chars)){
+                //出栈
+                stack.popLast()
+            }else{
+                return false;
+                
+            }
+            
+        }
+    }
+
+    return stack.isEmpty
+}
+isValid(")}{({))[{{[}")
+
+//88. Merge Sorted Array
+func merge(_ nums1: inout [Int], _ m: Int, _ nums2: [Int], _ n: Int) {
+    //nums1 的末尾 比 nums2 的开头小
+    if nums2.count == 0 {
+        return
+    }
+    if nums1.count == 0 {
+        nums1 = nums2
+        return
+    }
+    
+    if nums1.last! <= nums2.first! {
+        nums1.append(contentsOf: nums2)
+        return
+    }
+    
+    //从头开始遍历
+    var i = 0
+    var j = 0
+    while i + j < m + 2 * n - 1 && j < n{
+        
+        //上来s2 就小的话直接塞到最前面
+        if nums2[j] <= nums1[i] {
+            
+            nums1.insert(nums2[j], at: i)
+//            i+=1
+            j+=1
+            
+        }else{
+
+            
+            
+            while i < nums1.count && nums1[i] <= nums2[j] {
+                i += 1
+            }
+            
+//            print(nums2[j])
+//            print(nums1)
+//            print(j)
+//            print(i)
+            nums1.insert(nums2[j], at: i)
+            j += 1
+//            i -= 1
+        }
+        
+        
+        
+    }
+
+}
+var s1 = [1,3,4,5,6,8,17]
+var s2 = [0,3,5,7,9,11,12]
+merge(&s1, 7, s2, 7)
+print(s1)
+
+//234. Palindrome Linked List
+func isPalindrome(_ head: ListNode?) -> Bool {
+    
+    var valArray:[Int] = []
+    
+    var temp = head
+    
+    //加到数组中
+    while  temp != nil{
+        
+        valArray.append((temp?.val)!)
+        temp = temp?.next
+    }
+    
+    let count = valArray.count
+    
+    if count <= 1 {
+        return true
+    }
+    
+    //定位
+    
+    var endPos = 0
+    if count % 2 == 0 {
+        
+        endPos = count / 2
+        
+    }else{
+        endPos = count / 2 - 1
+        
+    }
+    
+    
+    //开始遍历
+    
+    for i in 0...endPos {
+        // print(" \(valArray[i]) , \(valArray[count - i - 1]) ")
+        if valArray[i] != valArray[count - i - 1] {
+            return false
+        }
+    }
+    
+    
+    return true
+}
+//58. Length of Last Word
+func lengthOfLastWord(_ s: String) -> Int {
+    var res = 0
+    
+    
+    let strArray = s.characters.split(separator: Character(" "))
+    
+    if strArray.count == 0 {
+        return res
+    }
+    
+    let last = strArray.last
+    
+    res = (last?.count)!
+    
+    return res
+    
+    
+    
+}
+lengthOfLastWord("Hello World")
+
+//203. Remove Linked List Elements
+func removeElements(_ head: ListNode?, _ val: Int) -> ListNode? {
+    
+    
+    if head == nil {
+        return head
+    }
+    
+    var newHead = head
+    
+    //去掉头
+    while newHead?.val == val {
+        if newHead?.next == nil {
+            return nil
+        }else{
+            newHead = newHead?.next
+        }
+    }
+    
+    let resHead = newHead
+    
+    
+    //开始遍历
+    while  newHead?.next != nil{
+        //相同的话
+        
+        //去掉头
+        var isPass = false
+        while newHead?.next?.val == val {
+            let next = newHead?.next?.next
+            newHead?.next = next
+            if next == nil {
+                break
+            }
+            isPass = true
+        }
+        
+        if !isPass {
+          newHead = newHead?.next
+        }
+        
+        
+    
+        
+        
+        
+    }
+    
+    
+
+    return resHead
+}
 /**********************************************/
 
 var strs = "aeiou AEIOU 1234567890A B hello world"
