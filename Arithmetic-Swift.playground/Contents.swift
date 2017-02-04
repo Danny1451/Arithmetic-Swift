@@ -2057,6 +2057,45 @@ func removeElements(_ head: ListNode?, _ val: Int) -> ListNode? {
 
     return resHead
 }
+
+//400. Nth Digit
+func findNthDigit(_ n: Int) -> Int {
+    
+    
+// 超过了复杂度
+    
+//    var str = ""
+//    var i = 1
+//    while str.characters.count < n {
+//        str.append(String(i))
+//        i += 1
+//    }
+//    
+//    var cString = str.cString(using: String.Encoding.ascii)!
+//    
+//    res = cString[n-1].hashValue - 48
+    
+    var len = 1
+    var count = 9
+    var start = 1
+    var n = n
+    while n > len * count {
+        n -= len * count
+        len += 1
+        count *= 10
+        start *= 10
+    }
+    start += (n - 1) / len
+    let str = String(start)
+    
+    var cs = str.cString(using: String.Encoding.ascii)!
+    
+    return cs[(n - 1) % len].hashValue - 48
+}
+
+findNthDigit(10000)
+
+
 /**********************************************/
 
 var strs = "aeiou AEIOU 1234567890A B hello world"
